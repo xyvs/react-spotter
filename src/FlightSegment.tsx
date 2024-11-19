@@ -1,9 +1,8 @@
 import { format, formatDuration } from "date-fns";
 
-function FlightSegment({ segment, key }) {
+function FlightSegment({ segment }) {
     return (
         <div
-            key={key}
             className="flex flex-col md:flex-row items-start md:items-center justify-start md:justify-between gap-2 border-t border-border p-4 bg-secondary"
         >
             <div>

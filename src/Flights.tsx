@@ -20,7 +20,7 @@ function Flights({ flights }) {
                         </CardHeader>
                         <CardContent className="p-0">
                             {flights.data.itineraries.map((flight, index) => (
-                                <Flight flight={flight} key={index} />
+                                <Flight key={index} flight={flight} />
                             ))}
                         </CardContent>
                     </Card>

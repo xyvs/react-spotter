@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 import * as React from "react";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -32,6 +32,8 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 
+import { getAirportIDs, getFlights } from "../services.tsx";
+
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,7 +48,7 @@ const FormSchema = z
         destination: z.string().min(3, {
             message: "Destination must be at least 3 characters.",
         }),
-        flight_class: z.enum(["economy", "premium", "business"], {
+        flight_class: z.enum(["economy", "premium_economy", "business"], {
             message: "Class must be one of economy, premium or business.",
         }),
         is_single_flight: z.boolean(),
@@ -72,7 +74,7 @@ const FormSchema = z
         }
     });
 
-function FlightForm() {
+function FlightForm({ setFlights }: { setFlights: (flights: any) => void }) {
     const [loading, setLoading] = React.useState<boolean>(false);
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -87,15 +89,56 @@ function FlightForm() {
     const is_single_flight = watch("is_single_flight");
     const departure_date = watch("departure_date");
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
+    const onSubmit = async (data: z.infer<typeof FormSchema>) => {
         setLoading(true);
-        console.log(loading);
-        setTimeout(() => {
-            alert("Form submitted successfully!");
-        }, 2000);
         console.log(data);
+        try {
+            const origin_airport = await getAirportIDs(data.origin);
+            console.log(origin_airport);
+            if (origin_airport.data.length === 0) {
+                form.setError("origin", {
+                    type: "manual",
+                    message: "Unable to find airport",
+                });
+                return;
+            }
+            console.log(origin_airport.data[0]);
+
+            const destination_airport = await getAirportIDs(data.destination);
+            console.log(destination_airport);
+            if (destination_airport.data.length === 0) {
+                form.setError("destination", {
+                    type: "manual",
+                    message: "Unable to find airport",
+                });
+                return;
+            }
+            console.log(destination_airport.data[0]);
+
+            let departure_date = format(data.departure_date, "yyyy-MM-dd");
+            let return_date = '';
+            if (!data.is_single_flight && data.return_date) {
+                return_date = format(data.return_date, "yyyy-MM-dd");
+            }
+
+            const flights = await getFlights({
+                origin: origin_airport.data[0],
+                destination: destination_airport.data[0],
+                departure_date: departure_date,
+                return_date: return_date,
+                flight_class: data.flight_class,
+            });
+            console.log(flights);
+
+            setFlights(flights);
+        } catch (error) {
+            console.error("Unexpected error:", error);
+        } finally {
+            setLoading(false);
+        }
+
         setLoading(false);
-    }
+    };
 
     return (
         <Card className="max-w-[700px] w-full">
@@ -167,7 +210,7 @@ function FlightForm() {
                                                 </FormItem>
                                                 <FormItem className="flex items-center space-x-3 space-y-0">
                                                     <FormControl>
-                                                        <RadioGroupItem value="premium" />
+                                                        <RadioGroupItem value="premium_economy" />
                                                     </FormControl>
                                                     <FormLabel className="font-normal cursor-pointer">
                                                         Premium

@@ -11,11 +11,11 @@ import {
 
 import FlightSegment from "./FlightSegment";
 
-function Flight({ flight, key }) {
+function Flight({ flight }) {
     const [isOpen, setIsOpen] = React.useState(false);
 
     return (
-        <div key={key} className="border-t border-border">
+        <div className="border-t border-border">
             <Collapsible open={isOpen} onOpenChange={setIsOpen}>
                 <div className="px-8 py-4 flex flex-col md:flex-row justify-between gap-4">
                     <div className="flex items-center gap-8">
@@ -40,10 +40,10 @@ function Flight({ flight, key }) {
                             <div>→</div>
                             <div>
                                 <div className="text-lg font-medium">
-                                    {format(flight.legs[0].arrival, "p")}
+                                    {format(flight.legs[flight.legs.length - 1].arrival, "p")}
                                 </div>
                                 <div className="text-sm text-muted-foreground">
-                                    {format(flight.legs[0].arrival, "PP")}
+                                    {format(flight.legs[flight.legs.length - 1].arrival, "PP")}
                                 </div>
                             </div>
                         </span>
@@ -82,9 +82,12 @@ function Flight({ flight, key }) {
                 </div>
 
                 <CollapsibleContent>
-                    {flight.legs[0].segments.map((segment, index) => (
-                        <FlightSegment segment={segment} key={index} />
-                    ))}
+                {flight.legs.map((leg) => (
+                    leg.segments.map((segment, index) => (
+                        <FlightSegment key={index} segment={segment} />
+                    ))
+                ))}
+
                 </CollapsibleContent>
             </Collapsible>
         </div>
