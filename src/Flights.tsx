@@ -1,6 +1,12 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 
-import Flight from "./Flight"
+import Flight from "./Flight";
 
 function Flights({ flights }) {
     {
@@ -18,32 +24,34 @@ function Flights({ flights }) {
                             ))}
                         </CardContent>
                     </Card>
-                )
+                );
             } else {
                 return (
                     <Card className="max-w-[900px] w-full">
                         <CardHeader>
                             <CardTitle>Flights</CardTitle>
-                            <CardDescription>No flights available :(</CardDescription>
+                            <CardDescription>
+                                No flights available :(
+                            </CardDescription>
                         </CardHeader>
-                        <CardContent className="p-0">
-                        </CardContent>
+                        <CardContent className="p-0"></CardContent>
                     </Card>
-                )
+                );
             }
         } else {
             return (
                 <Card className="max-w-[900px] w-full">
                     <CardHeader>
                         <CardTitle>Flights</CardTitle>
-                        <CardDescription>Input your flight details to get started!</CardDescription>
+                        <CardDescription>
+                            Input your flight details to get started!
+                        </CardDescription>
                     </CardHeader>
-                    <CardContent className="p-0">
-                    </CardContent>
+                    <CardContent className="p-0"></CardContent>
                 </Card>
-            )
+            );
         }
     }
 }
 
-export default Flights
+export default Flights;

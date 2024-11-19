@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
 import {
     Card,
@@ -7,21 +7,21 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 
-import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
-import * as React from "react"
-import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
-import { Calendar } from "@/components/ui/calendar"
+import * as React from "react";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover"
-import { Switch } from "@/components/ui/switch"
+} from "@/components/ui/popover";
+import { Switch } from "@/components/ui/switch";
 
 import {
     Form,
@@ -30,45 +30,50 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-  } from "@/components/ui/form"
+} from "@/components/ui/form";
 
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-const FormSchema = z.object({
-    origin: z.string().min(3, {
-        message: "Origin must be at least 3 characters.",
-    }),
-    destination: z.string().min(3, {
-        message: "Destination must be at least 3 characters.",
-    }),
-    flight_class: z.enum(["economy", "premium", "business"], {
-        message: "Class must be one of economy, premium or business.",
-    }),
-    is_single_flight: z.boolean(),
-    departure_date: z.date().refine((date) => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        return date > today;
-    }, {
-        message: "Departure date must be in the future",
-    }),
-    return_date: z.date().optional(),
-}).superRefine((data, ctx) => {
-    if (!data.is_single_flight && !data.return_date) {
-        ctx.addIssue({
-          code: "custom",
-          message: "Return date required for round trip flights",
-          path: ["return_date"]
-        });
-    }
-});
+const FormSchema = z
+    .object({
+        origin: z.string().min(3, {
+            message: "Origin must be at least 3 characters.",
+        }),
+        destination: z.string().min(3, {
+            message: "Destination must be at least 3 characters.",
+        }),
+        flight_class: z.enum(["economy", "premium", "business"], {
+            message: "Class must be one of economy, premium or business.",
+        }),
+        is_single_flight: z.boolean(),
+        departure_date: z.date().refine(
+            (date) => {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                return date > today;
+            },
+            {
+                message: "Departure date must be in the future",
+            },
+        ),
+        return_date: z.date().optional(),
+    })
+    .superRefine((data, ctx) => {
+        if (!data.is_single_flight && !data.return_date) {
+            ctx.addIssue({
+                code: "custom",
+                message: "Return date required for round trip flights",
+                path: ["return_date"],
+            });
+        }
+    });
 
 function FlightForm() {
-    const [loading, setLoading] = React.useState<boolean>(false)
+    const [loading, setLoading] = React.useState<boolean>(false);
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -76,7 +81,7 @@ function FlightForm() {
             is_single_flight: false,
             flight_class: "economy",
         },
-    })
+    });
 
     const { watch } = form;
     const is_single_flight = watch("is_single_flight");
@@ -84,7 +89,7 @@ function FlightForm() {
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
         setLoading(true);
-        console.log(loading)
+        console.log(loading);
         setTimeout(() => {
             alert("Form submitted successfully!");
         }, 2000);
@@ -95,32 +100,50 @@ function FlightForm() {
     return (
         <Card className="max-w-[700px] w-full">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="w-full space-y-6"
+                >
                     <CardHeader>
                         <CardTitle>Book a flight</CardTitle>
-                        <CardDescription>Fill the form and search for a flight!</CardDescription>
+                        <CardDescription>
+                            Fill the form and search for a flight!
+                        </CardDescription>
                     </CardHeader>
                     <CardContent>
-
                         <div className="grid grid-cols-2 gap-4">
-                            <FormField control={form.control} name="origin" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Origin</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="New York" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
-                            <FormField control={form.control} name="destination" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Destination</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="London" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
+                            <FormField
+                                control={form.control}
+                                name="origin"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Origin</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="New York"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="destination"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Destination</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="London"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
                             <FormField
                                 control={form.control}
@@ -179,23 +202,34 @@ function FlightForm() {
                                                             variant={"outline"}
                                                             className={cn(
                                                                 "w-full justify-start text-left font-normal",
-                                                                !field.value && "text-muted-foreground"
+                                                                !field.value &&
+                                                                    "text-muted-foreground",
                                                             )}
                                                         >
                                                             <CalendarIcon className="opacity-50" />
                                                             {field.value ? (
-                                                                format(field.value, "PPP")
+                                                                format(
+                                                                    field.value,
+                                                                    "PPP",
+                                                                )
                                                             ) : (
-                                                                <span>Pick a date</span>
+                                                                <span>
+                                                                    Pick a date
+                                                                </span>
                                                             )}
                                                         </Button>
                                                     </FormControl>
                                                 </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0" align="start">
+                                                <PopoverContent
+                                                    className="w-auto p-0"
+                                                    align="start"
+                                                >
                                                     <Calendar
                                                         mode="single"
                                                         selected={field.value}
-                                                        onSelect={field.onChange}
+                                                        onSelect={
+                                                            field.onChange
+                                                        }
                                                         disabled={(date) =>
                                                             date < new Date()
                                                         }
@@ -219,28 +253,47 @@ function FlightForm() {
                                                     <PopoverTrigger asChild>
                                                         <FormControl>
                                                             <Button
-                                                                variant={"outline"}
+                                                                variant={
+                                                                    "outline"
+                                                                }
                                                                 className={cn(
                                                                     "w-full justify-start text-left font-normal",
-                                                                    !field.value && "text-muted-foreground"
+                                                                    !field.value &&
+                                                                        "text-muted-foreground",
                                                                 )}
                                                             >
                                                                 <CalendarIcon className="opacity-50" />
                                                                 {field.value ? (
-                                                                    format(field.value, "PPP")
+                                                                    format(
+                                                                        field.value,
+                                                                        "PPP",
+                                                                    )
                                                                 ) : (
-                                                                    <span>Pick a date</span>
+                                                                    <span>
+                                                                        Pick a
+                                                                        date
+                                                                    </span>
                                                                 )}
                                                             </Button>
                                                         </FormControl>
                                                     </PopoverTrigger>
-                                                    <PopoverContent className="w-auto p-0" align="start">
+                                                    <PopoverContent
+                                                        className="w-auto p-0"
+                                                        align="start"
+                                                    >
                                                         <Calendar
                                                             mode="single"
-                                                            selected={field.value}
-                                                            onSelect={field.onChange}
+                                                            selected={
+                                                                field.value
+                                                            }
+                                                            onSelect={
+                                                                field.onChange
+                                                            }
                                                             disabled={(date) =>
-                                                                date < new Date(departure_date)
+                                                                date <
+                                                                new Date(
+                                                                    departure_date,
+                                                                )
                                                             }
                                                             initialFocus
                                                         />
@@ -250,7 +303,6 @@ function FlightForm() {
                                             </FormItem>
                                         )}
                                     />
-
                                 )}
                             </div>
                             <FormField
@@ -268,20 +320,21 @@ function FlightForm() {
                                     </FormItem>
                                 )}
                             />
-
                         </div>
-
-
                     </CardContent>
                     <CardFooter>
-                        <Button className="w-full" type="submit" disabled={loading}>
+                        <Button
+                            className="w-full"
+                            type="submit"
+                            disabled={loading}
+                        >
                             {loading ? "Loading..." : "Search"}
                         </Button>
                     </CardFooter>
                 </form>
             </Form>
         </Card>
-    )
+    );
 }
 
-export default FlightForm
+export default FlightForm;

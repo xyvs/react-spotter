@@ -1,14 +1,21 @@
-import { format, formatDuration } from "date-fns"
+import { format, formatDuration } from "date-fns";
 
 function FlightSegment({ segment, key }) {
     return (
-        <div key={key} className="flex flex-col md:flex-row items-start md:items-center justify-start md:justify-between gap-2 border-t border-border p-4 bg-secondary">
+        <div
+            key={key}
+            className="flex flex-col md:flex-row items-start md:items-center justify-start md:justify-between gap-2 border-t border-border p-4 bg-secondary"
+        >
             <div>
                 <div className="font-medium">
-                    {formatDuration({ hours: Math.floor(segment.durationInMinutes / 60), minutes: segment.durationInMinutes % 60 })}
+                    {formatDuration({
+                        hours: Math.floor(segment.durationInMinutes / 60),
+                        minutes: segment.durationInMinutes % 60,
+                    })}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                    {segment.origin.name} ({segment.origin.country}) → {segment.destination.name} ({segment.destination.country})
+                    {segment.origin.name} ({segment.origin.country}) →{" "}
+                    {segment.destination.name} ({segment.destination.country})
                 </div>
             </div>
 
@@ -22,9 +29,7 @@ function FlightSegment({ segment, key }) {
                             {format(segment.departure, "PP")}
                         </div>
                     </div>
-                    <div>
-                        →
-                    </div>
+                    <div>→</div>
                     <div>
                         <div className="text-lg font-medium">
                             {format(segment.arrival, "p")}
@@ -36,7 +41,7 @@ function FlightSegment({ segment, key }) {
                 </span>
             </div>
         </div>
-    )
+    );
 }
 
-export default FlightSegment
+export default FlightSegment;
